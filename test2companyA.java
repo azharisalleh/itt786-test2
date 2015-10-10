@@ -28,6 +28,8 @@ public class test2companyA{
 	try {
 		
 		System.out.println("Reading Local IP and MAC Address For Company A");
+		System.out.print("\n");
+		
 		ip = InetAddress.getLocalHost();
 		System.out.println("Current IP address : " + ip.getHostAddress());
 		
@@ -36,13 +38,17 @@ public class test2companyA{
 		byte[] mac = network.getHardwareAddress();
 			
 		System.out.print("Current MAC address : ");
-			
+		
+		
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < mac.length; i++) {
 			sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));		
 		}
 		System.out.println(sb.toString());
-			
+		
+		System.out.print("\n");
+		System.out.print("Reading Complete");
+		
 	} catch (UnknownHostException e) {
 		
 		e.printStackTrace();
