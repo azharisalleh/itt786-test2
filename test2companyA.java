@@ -1,11 +1,15 @@
 package Q1;
 
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import static java.lang.System.out;
+
 /*
  * This program for Company A:
- * Enhancement  features to get information about IPV6 
- * Information : IPV6 and MAC Address
+ * New Enhancement  features to get information about IPV6 and Thread 
+ * Information : IPV6, MAC Address and Thread.
 */
-
 /*
  * author : Azhari Hj Salleh
  * matrix no : 201461166
@@ -14,43 +18,69 @@ package Q1;
  * 
  */
 
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import static java.lang.System.out;
+class MyClasss implements Runnable{
 
-
-public class test2companyA{
-	
-    public static void main(String args[]) throws SocketException {
-        Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+	@Override
+	public void run() {
+		
+		Enumeration<NetworkInterface> nets = null;
+		try {
+			nets = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         for (NetworkInterface netint : Collections.list(nets))
             displayInterfaceInformation(netint);
-    }
+		
+	try {
+		//Pause each thread by 100milisecond
+		Thread.sleep(100);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		
+	}
 
-    static void displayInterfaceInformation(NetworkInterface netint) throws SocketException {
-       
+	private void displayInterfaceInformation(NetworkInterface netint) {
+		// TODO Auto-generated method stub
         out.printf("\n");
         System.out.println("Initial Program to Access of IPv6 of Subinterface");
-    	out.printf("Display name: %s\n", netint.getDisplayName());
-        out.printf("Name: %s\n", netint.getName());
+    	out.printf(Thread.currentThread().getId()+ " Display name: %s\n", netint.getDisplayName());
+        out.printf(Thread.currentThread().getId()+ " Name: %s\n", netint.getName());
         Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
         
         for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-            out.printf("InetAddress: %s\n", inetAddress);
+            out.printf(Thread.currentThread().getId()+ " InetAddress: %s\n", inetAddress);
         }
        
 
-        out.printf("Hardware address: %s\n",
-                    Arrays.toString(netint.getHardwareAddress()));
+        try {
+			out.printf(Thread.currentThread().getId()+ " Hardware address: %s\n",
+			            Arrays.toString(netint.getHardwareAddress()));
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         out.printf("\n");
         System.out.println("End Info for Subinterface");
-     
-	    
-   }
+	}
+	
+}
+public class test2companyA {
+
+	public static void main(String[] args) throws SocketException {
+		
+		
+		Thread t1 = new Thread(new MyClasss());
+		Thread t2 = new Thread(new MyClasss());
+		Thread t3 = new Thread(new MyClasss());
+		t1.start();
+		t2.start();
+		t3.start();
+	}
 
 }
+
