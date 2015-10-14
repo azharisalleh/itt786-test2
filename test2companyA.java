@@ -1,11 +1,15 @@
 package Q1;
 
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import static java.lang.System.out;
+
 /*
  * This program for Company A:
- * Reading information from Network Interface Card (NIC)
- * Information : IP and MAC Address
+ * New Enhancement  features to get information about IPV6 and Thread 
+ * Information : IPV6, MAC Address and Thread.
 */
-
 /*
  * author : Azhari Hj Salleh
  * matrix no : 201461166
@@ -14,45 +18,69 @@ package Q1;
  * 
  */
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+class MyClasss implements Runnable{
 
-
-public class test2companyA{
-	
-   public static void main(String[] args){
+	@Override
+	public void run() {
 		
-	InetAddress ip;
-	try {
-		
-		System.out.println("Reading Local IP and MAC Address For Company A");
-		ip = InetAddress.getLocalHost();
-		System.out.println("Current IP address : " + ip.getHostAddress());
-		
-		NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-			
-		byte[] mac = network.getHardwareAddress();
-			
-		System.out.print("Current MAC address : ");
-			
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < mac.length; i++) {
-			sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));		
+		Enumeration<NetworkInterface> nets = null;
+		try {
+			nets = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		System.out.println(sb.toString());
-			
-	} catch (UnknownHostException e) {
+        for (NetworkInterface netint : Collections.list(nets))
+            displayInterfaceInformation(netint);
 		
+	try {
+		//Pause each thread by 100milisecond
+		Thread.sleep(100);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
 		e.printStackTrace();
-		
-	} catch (SocketException e){
-			
-		e.printStackTrace();
-			
 	}
-	    
-   }
+		
+	}
+
+	private void displayInterfaceInformation(NetworkInterface netint) {
+		// TODO Auto-generated method stub
+        out.printf("\n");
+        System.out.println("Initial Program to Access of IPv6 of Subinterface");
+    	out.printf(Thread.currentThread().getId()+ " Display name: %s\n", netint.getDisplayName());
+        out.printf(Thread.currentThread().getId()+ " Name: %s\n", netint.getName());
+        Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
+        
+        for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+            out.printf(Thread.currentThread().getId()+ " InetAddress: %s\n", inetAddress);
+        }
+       
+
+        try {
+			out.printf(Thread.currentThread().getId()+ " Hardware address: %s\n",
+			            Arrays.toString(netint.getHardwareAddress()));
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        out.printf("\n");
+        System.out.println("End Info for Subinterface");
+	}
+	
+}
+public class test2companyA {
+
+	public static void main(String[] args) throws SocketException {
+		
+		
+		Thread t1 = new Thread(new MyClasss());
+		Thread t2 = new Thread(new MyClasss());
+		Thread t3 = new Thread(new MyClasss());
+		t1.start();
+		t2.start();
+		t3.start();
+	}
 
 }
+
